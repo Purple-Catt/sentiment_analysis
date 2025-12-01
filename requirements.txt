@@ -1,0 +1,10 @@
+pandas
+numpy
+yfinance
+requests
+scikit-learn
+xgboost
+transformers
+torch
+streamlit
+python-dateutil
