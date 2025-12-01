@@ -59,15 +59,21 @@ if train_button:
         # Simple visualization for the first ticker
         first_ticker = tickers[0]
         st.subheader(f"Price & Sentiment for {first_ticker}")
-        tech_df_t = tech_feats[first_ticker].reset_index().rename(columns={"index": "date"})
+
+        tech_df_t = tech_feats[first_ticker].copy()  # index is already the date
+        tech_df_t = tech_df_t.sort_index()
+
         merged = pd.merge(
-            tech_df_t[["date", "close"]],
-            ml_df[ml_df["ticker"] == first_ticker][["date", "sent_mean"]],
-            on="date",
+            tech_df_t[["close"]],
+            ml_df[ml_df["ticker"] == first_ticker][["date", "sent_mean"]]
+            .set_index("date"),
+            left_index=True,
+            right_index=True,
             how="left",
         )
-        merged = merged.set_index("date").sort_index()
+
         st.line_chart(merged[["close"]])
         st.line_chart(merged[["sent_mean"]])
+
 else:
     st.info("Configure parameters in the sidebar and click 'Run full pipeline'.")
